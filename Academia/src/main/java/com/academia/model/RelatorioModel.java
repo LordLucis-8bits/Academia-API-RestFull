@@ -1,7 +1,7 @@
 package com.academia.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "Relatorios")
@@ -11,11 +11,11 @@ public class RelatorioModel {
     private AulaModel aula;
     private InstrutorModel instrutor;
     private List<AlunoModel> alunos;
-    private LocalDate dataHoraGeracao;
+    private LocalDateTime dataHoraGeracao;
 
     public RelatorioModel() {}
 
-    public RelatorioModel(String id, AulaModel aula, InstrutorModel instrutor, List<AlunoModel> alunos, LocalDate dataHoraGeracao) {
+    public RelatorioModel(String id, AulaModel aula, InstrutorModel instrutor, List<AlunoModel> alunos, LocalDateTime dataHoraGeracao) {
         this.id = id;
         this.aula = aula;
         this.instrutor = instrutor;
@@ -28,13 +28,13 @@ public class RelatorioModel {
     public AulaModel getAula() {return aula;}
     public InstrutorModel getInstrutor() {return instrutor;}
     public List<AlunoModel> getAlunos() {return alunos;}
-    public LocalDate getDataHoraGeracao() {return dataHoraGeracao;}
+    public LocalDateTime getDataHoraGeracao() {return dataHoraGeracao;}
     
     // Setters
     public void setId(String id) {this.id = id;}
     public void setAula(AulaModel aula) {this.aula = aula;}
     public void setInstrutor(InstrutorModel instrutor) {this.instrutor = instrutor;}
     public void setAlunos(List<AlunoModel> alunos) {this.alunos = alunos;}
-    public void setDataHoraGeracao(LocalDate dataHoraGeracao) {this.dataHoraGeracao = dataHoraGeracao;}
+    public void setDataHoraGeracao(LocalDateTime dataHoraGeracao) {this.dataHoraGeracao = dataHoraGeracao;}
 
 }

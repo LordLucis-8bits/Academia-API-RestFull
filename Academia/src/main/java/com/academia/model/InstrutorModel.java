@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class InstrutorModel extends UsuarioModel {
     private String especialidade;
     private ArrayList<AulaModel> aulasMinistradas = new ArrayList<>(); // Inicializa a lista de aulas ministradas
+    private TipoDeUsuario tipoDeUsuario; // Define o tipo de usuário como "Instrutor"
 
     public InstrutorModel() {super();}
     
@@ -20,9 +21,11 @@ public class InstrutorModel extends UsuarioModel {
     //Getters
     public String getEspecialidade() {return especialidade;}
     public ArrayList<AulaModel> getAulasMinistradas() {return aulasMinistradas;}
+    public TipoDeUsuario getTipoDeUsuario() {return tipoDeUsuario;} // Define o tipo de usuário como "Instrutor"
 
     //Setters
     public void setEspecialidade(String especialidade) {this.especialidade = especialidade;}
-    public void setAulasMinistradas(ArrayList<AulaModel> aulasMinistradas) {this.aulasMinistradas = aulasMinistradas;}
+    public void setAulasMinistradas(ArrayList<AulaModel> aulasMinistradas) {this.aulasMinistradas = aulasMinistradas;}  
+    public void setTipoDeUsuario(TipoDeUsuario tipoDeUsuario) {this.tipoDeUsuario = tipoDeUsuario;} // Define o tipo de usuário como "Instrutor"
 
 }

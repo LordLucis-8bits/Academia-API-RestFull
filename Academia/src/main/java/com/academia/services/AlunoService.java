@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.academia.enums.AulaStatus;
 import com.academia.enums.PlanoStatus;
 import com.academia.enums.TipoDePlano;
@@ -14,7 +13,7 @@ import com.academia.repository.AlunoRepository;
 import com.academia.repository.AulaRepository;
 
 @Service
-public class AlunoServices {
+public class AlunoService {
 
     @Autowired
     private AlunoRepository alunoRepository;
@@ -26,7 +25,7 @@ public class AlunoServices {
         return alunoRepository.save(aluno);
     }
 
-    protected LocalDate calcularrDataFimPlano(TipoDePlano tipoDePlano, LocalDateTime dataInicioDePlano) {
+    protected LocalDate calcularDataFimPlano(TipoDePlano tipoDePlano, LocalDateTime dataInicioDePlano) {
         LocalDate dataFimPlano = null;
         switch (tipoDePlano) {
             case DIARIO:
@@ -75,6 +74,5 @@ public class AlunoServices {
         .filter(aula -> aula.getStatus() == AulaStatus.DISPONIVEL)
         .toList();
     }
-
-   
+    
 }
