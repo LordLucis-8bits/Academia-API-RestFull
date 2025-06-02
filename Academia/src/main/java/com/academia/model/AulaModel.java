@@ -14,7 +14,7 @@ public class AulaModel {
     private InstrutorModel instrutor;
     private int limiteAlunos;
     private List<AlunoModel> alunosMatriculados; // Inicializa a lista de alunos matriculados
-    private AulaStatus status; //"Iniciada", "Finalizada", "Em Andamento", "Cancelada"
+    private AulaStatus status; //"DISPONIVEL", "INDISPONIVEL", "FINALIZADA", "EM_ANDAMENTO", "CANCELADA"
 
     public AulaModel() {}
 
