@@ -21,8 +21,23 @@ public class AlunoService {
     @Autowired
     private AulaRepository aulaRepository;
     
-    public AlunoModel matricularEmAula(AlunoModel aluno) {
-        return alunoRepository.save(aluno);
+    public AlunoModel matricularEmAula(AlunoModel aluno, AulaModel aula) {
+
+        if (aluno == null || aula == null) {
+            throw new IllegalArgumentException("Aluno ou aula não podem ser nulos.");
+        }
+        if (aluno.getAulasMatriculadas().contains(aula)) {
+            throw new IllegalArgumentException("Aluno já está matriculado nesta aula.");
+        }
+        if (aula.getAlunosMatriculados().size() >= aula.getLimiteAlunos()) {
+            throw new IllegalArgumentException("Limite de aulas matriculadas atingido.");
+        }
+        aluno.getAulasMatriculadas().add(aula);
+        aula.getAlunosMatriculados().add(aluno);
+
+        alunoRepository.save(aluno);
+        aulaRepository.save(aula);
+        return aluno;
     }
 
     protected LocalDate calcularDataFimPlano(TipoDePlano tipoDePlano, LocalDateTime dataInicioDePlano) {

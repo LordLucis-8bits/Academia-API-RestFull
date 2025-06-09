@@ -17,6 +17,10 @@ public class AulaService {
     @Autowired
     private AulaRepository aulaRepository;
 
+    @Autowired
+    private RelatorioService relatorioService;
+
+
     public boolean autenticar(String email, String senha) {
         InstrutorModel instrutor = instrutorRepository.findByEmail(email);
         if (instrutor != null && instrutor.getSenha().equals(senha)) {
@@ -25,7 +29,8 @@ public class AulaService {
             throw new SecurityException("Email ou senha inválidos");
         }
     }
-
+    
+    //Iniciar aula
     public void iniciarAula(String id, String email, String senha) {
         if (autenticar(email, senha)) {
             AulaModel aula = aulaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Aula não encontrada"));
@@ -36,35 +41,14 @@ public class AulaService {
         }
     }
 
+    //Finalizar aula 
     public void finalizarAula(String id, String email, String senha) {
         if (autenticar(email, senha)) {
-            AulaModel aula = aulaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Aula não encontrada"));
+            AulaModel aula = aulaRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Aula não encontrada"));
             aula.setStatus(AulaStatus.FINALIZADA);
             aulaRepository.save(aula);
-        } else {
-            throw new SecurityException("Email ou senha inválidos");
-        }
-    }
-
-    public void cancelarAula(String id, String email, String senha) {
-        if (autenticar(email, senha)) {
-            AulaModel aula = aulaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Aula não encontrada"));
-            aula.setStatus(AulaStatus.CANCELADA);
-            aulaRepository.save(aula);
-        } else {
-            throw new SecurityException("Email ou senha inválidos");
-        }
-    }
-
-    public void adicionarAluno(String id, String email, String senha, AlunoModel aluno) {
-        if (autenticar(email, senha)) {
-            AulaModel aula = aulaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Aula não encontrada"));
-            if (aula.getAlunosMatriculados().size() < aula.getLimiteAlunos()) {
-                aula.getAlunosMatriculados().add(aluno);
-                aulaRepository.save(aula);
-            } else {
-                throw new IllegalStateException("Limite de alunos atingido");
-            }
+            relatorioService.gerarRelatorio(aula); // Gera o relatório automaticamente
         } else {
             throw new SecurityException("Email ou senha inválidos");
         }

@@ -13,14 +13,12 @@ public class RelatorioService {
     @Autowired
     private RelatorioRepository relatorioRepository;
 
-    //Gerar relatorio automaticamente quando finalizar aula
     public RelatorioModel gerarRelatorio(AulaModel aula) {
         RelatorioModel relatorio = new RelatorioModel();
         relatorio.setDataHoraGeracao(LocalDateTime.now());
         relatorio.setInstrutor(aula.getInstrutor());
         relatorio.setAula(aula);
         relatorio.setAlunos(aula.getAlunosMatriculados());
-
         return relatorioRepository.save(relatorio);
     }
     

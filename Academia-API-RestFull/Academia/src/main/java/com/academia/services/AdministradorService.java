@@ -66,6 +66,7 @@ public class AdministradorService {
         instrutorRepository.findAll().forEach(System.out::println);
     }
 
+
     //Aulas
     public void cadastrarAula(AulaModel aula) {
         aulaRepository.save(aula);

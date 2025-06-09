@@ -11,11 +11,12 @@ public interface InstrutorRepository extends MongoRepository<InstrutorModel, Str
 
     //Buscar por nome
     List<InstrutorModel> findByNome(String nome);
-
-    InstrutorModel findByEmail(String email);
     
     //Buscar por especialidade
     List<InstrutorModel> findByEspecialidade(String especialidade);
+
+    //Buscar por email
+    InstrutorModel findByEmail(String email);
 
     //Buscar por Aulas Ministradas
     List<InstrutorModel> findByAulasMinistradas(ArrayList<AulaModel> aulasMinistradas);
