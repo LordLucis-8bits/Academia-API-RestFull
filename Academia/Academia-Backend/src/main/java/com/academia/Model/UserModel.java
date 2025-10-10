@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Document(collection = "Users")
 public class UserModel implements UserDetails {
     @Id
-    private int id; 
+    private String id; 
     private String name;
     private int idade;
     private String email;

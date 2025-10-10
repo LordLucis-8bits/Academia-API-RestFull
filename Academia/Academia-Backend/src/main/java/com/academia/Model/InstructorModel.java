@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "Instructors")
-public class IstructorModel extends UserModel {
+public class InstructorModel extends UserModel {
     private String specialty;
     private List<ClassModel> taughtClasses;
 }
