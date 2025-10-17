@@ -12,4 +12,6 @@ public interface StudentsRepository extends MongoRepository<StudentsModel, Strin
     Optional<StudentsModel> findByUsername(String email);
 
     List<StudentsModel> findByEnrollment(EnrollmentModel enrollment);
+
+    List<StudentsModel> findByAll();
 }

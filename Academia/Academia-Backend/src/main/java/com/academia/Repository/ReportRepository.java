@@ -14,4 +14,6 @@ public interface ReportRepository extends MongoRepository<ReportModel, String> {
     List<ReportModel> findByInstructorModel(InstructorModel instructor);
 
     List<ReportModel> findByClassModel(ClassModel classModel);
+
+    List<ReportModel> findByAll();
 }

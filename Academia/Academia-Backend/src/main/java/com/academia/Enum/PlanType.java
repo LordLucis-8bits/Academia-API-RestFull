@@ -4,5 +4,6 @@ public enum PlanType{
     DAILY,
     MONTHLY,
     QUARTERLY,
-    SEMMIANNUAL
+    SEMMIANNUAL,
+    ANNUAL
 }

@@ -11,4 +11,6 @@ public interface InstructorRepository extends MongoRepository<InstructorModel, S
     Optional<InstructorModel> findBySpecialty(String specialty);
 
     List<InstructorModel> findByInstructor(InstructorModel instructorModel);
+
+    List<InstructorModel> findByAll();
 }
