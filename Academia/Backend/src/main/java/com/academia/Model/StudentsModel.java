@@ -23,7 +23,7 @@ public class StudentsModel extends UserModel {
 
     //Validar planos se esta ativo
     public boolean isStudentPlanActive() {
-        return LocalDate.now().isBefore(planEnd) || LocalDate.now().isEqual(planEnd);
+        return planStatus == PlanStatus.ACTIVE && (LocalDate.now().isBefore(planEnd) || LocalDate.now().isEqual(planEnd));
     }
 }
 

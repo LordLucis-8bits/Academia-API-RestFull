@@ -13,7 +13,7 @@ import com.academia.Repository.StudentRepository;
 import org.springframework.lang.NonNull;
 
 @Service
-public class StudentsService {
+public class StudentService {
     
     @Autowired
     private StudentRepository studentRepository;
@@ -83,7 +83,7 @@ public class StudentsService {
     }
 
     //Calcular data de termino do plano
-    private LocalDate calculateEndDate(PlanType planType, LocalDate startDate) {
+    public LocalDate calculateEndDate(PlanType planType, LocalDate startDate) {
         switch (planType) {
             case DAILY:
                 return startDate.plusDays(1);
