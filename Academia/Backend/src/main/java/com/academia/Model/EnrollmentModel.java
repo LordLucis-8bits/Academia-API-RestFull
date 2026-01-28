@@ -16,6 +16,6 @@ public class EnrollmentModel {
     @Id
     private String id;
     private LocalDateTime registrationDate;
-    private StudentsModel participantStudents;
+    private StudentModel participantStudents;
     private TypeClass typeClass;
 }

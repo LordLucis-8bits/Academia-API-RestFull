@@ -2,15 +2,15 @@ package com.academia.Repository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import com.academia.Model.StudentsModel;
+import com.academia.Model.StudentModel;
 
-public interface StudentRepository extends MongoRepository<StudentsModel, String> {
+public interface StudentRepository extends MongoRepository<StudentModel, String> {
 
-    Optional<StudentsModel> findByEmail(String email);
+    Optional<StudentModel> findByEmail(String email);
 
-    List<StudentsModel> findByAge(int age);
+    List<StudentModel> findByAge(int age);
 
-    List<StudentsModel> findByStudentId(String studentId);
+    List<StudentModel> findByStudentId(String studentId);
 
     boolean existsByEmail(String email);
 }

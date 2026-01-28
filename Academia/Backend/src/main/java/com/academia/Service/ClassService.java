@@ -1,10 +1,11 @@
 package com.academia.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import com.academia.Enum.ClassStatus;
 import com.academia.Model.ClassModel;
+import com.academia.Model.InstructorModel;
 import com.academia.Repository.ClassRepository;
+import org.springframework.lang.NonNull;
 
 @Service
 public class ClassService {
@@ -15,41 +16,83 @@ public class ClassService {
     @Autowired
     private ReportService reportService;
 
-    //Inicia aula
-    public void startClass(@NonNull String instructorId, @NonNull String classId) {
+    @Autowired
+    private InstructorModel instructorModel;
+
+
+    //CRUD BASIC OPERATIONS
+    public ClassModel createClass(@NonNull ClassModel classModel) {
+        return classRepository.save(classModel);
+    }
+
+    public ClassModel updateClass(@NonNull String id, ClassModel updateClass) {
+        ClassModel classModel = classRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+
+        classModel.setTypeClass(classModel.getTypeClass());
+        classModel.setSchedule(classModel.getSchedule());
+        classModel.setStudentsLimit(classModel.getStudentsLimit());
+        classModel.setInstructorId(classModel.getInstructorId());
+        classModel.setClassStatus(classModel.getClassStatus());
+        classModel.setEnrolledStudents(classModel.getEnrolledStudents());
+        return classRepository.save(classModel);
+    }
+
+    public void deleteClass(@NonNull String id) {
+        if (!classRepository.existsById(id)) {
+            throw new IllegalArgumentException("Class not found");
+        }
+        classRepository.deleteById(id);
+    }
+
+    public ClassModel getClassById(@NonNull String id) {
+        return classRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+    }
+    
+    //REGRAS DE NEGÓCIO
+    //Iniciar uma aula
+    public void startClass(@NonNull String classId, String instructorId) {
 
         ClassModel classModel = classRepository.findById(classId)
-        .orElseThrow(() -> new RuntimeException("Class not found"));
+            .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
         if (!classModel.getInstructorId().equals(instructorId)) {
-            throw new RuntimeException("Unauthorized: Instructor does not match");
+            throw new IllegalStateException("Instructor not authorized");
         }
 
         if (classModel.getClassStatus() != ClassStatus.AVAILABLE) {
-            throw new RuntimeException("Class not available");
+            throw new IllegalStateException("Class not available");
         }
 
+        //Instrutor so iniciar e finalizar seu tipo de aula
+        if (classModel.getTypeClass() != instructorModel.getSpecialty()) {
+            throw new IllegalStateException("Instructor cannot control this type of class");
+        }
         classModel.setClassStatus(ClassStatus.INPROGRESS);
         classRepository.save(classModel);
     }
-    
-    //Finaliza aula
-    public void finishClass(@NonNull String instructorId, @NonNull String classId) {
+
+    //Finalizar uma aula
+    public void finishClass(@NonNull String classId, String instructorId) {
+
         ClassModel classModel = classRepository.findById(classId)
-        .orElseThrow(() -> new RuntimeException("Class not found"));
+            .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
         if (!classModel.getInstructorId().equals(instructorId)) {
-            throw new RuntimeException("Unauthorized: Instructor does not match");
+            throw new IllegalStateException("Instructor not authorized");
         }
 
         if (classModel.getClassStatus() != ClassStatus.INPROGRESS) {
-            throw new RuntimeException("Class not in progress");
+            throw new IllegalStateException("Class not in progress");
         }
 
+        if (classModel.getTypeClass() != instructorModel.getSpecialty()) {
+            throw new IllegalStateException("Instructor cannot control this type of class");
+        }
         classModel.setClassStatus(ClassStatus.FINISHED);
         classRepository.save(classModel);
 
-        //Gerar relatório ao finalizar a aula automaticamente
         reportService.generateClassReport(classModel);
     }
 }

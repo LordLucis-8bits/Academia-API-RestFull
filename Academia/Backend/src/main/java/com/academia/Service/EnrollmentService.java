@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.academia.Enum.ClassStatus;
 import com.academia.Model.ClassModel;
 import com.academia.Model.EnrollmentModel;
-import com.academia.Model.StudentsModel;
+import com.academia.Model.StudentModel;
 import com.academia.Repository.ClassRepository;
 import com.academia.Repository.EnrollmentRepository;
 import com.academia.Repository.StudentRepository;
@@ -23,7 +23,7 @@ public class EnrollmentService {
     EnrollmentRepository enrollmentRepository;
 
     public void enrollStudent(@NonNull String studentId, @NonNull String classId) {
-        StudentsModel studentsModel = studentRepository.findById(studentId)
+        StudentModel studentsModel = studentRepository.findById(studentId)
         .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         ClassModel classModel = classRepository.findById(classId)

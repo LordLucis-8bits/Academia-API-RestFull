@@ -7,7 +7,7 @@ import com.academia.Enum.ClassStatus;
 import com.academia.Enum.PlanStatus;
 import com.academia.Enum.PlanType;
 import com.academia.Model.ClassModel;
-import com.academia.Model.StudentsModel;
+import com.academia.Model.StudentModel;
 import com.academia.Repository.ClassRepository;
 import com.academia.Repository.StudentRepository;
 import org.springframework.lang.NonNull;
@@ -22,19 +22,20 @@ public class StudentService {
     private ClassRepository classRepository;
 
     //CRUD BASIC OPERATIONS
-    public StudentsModel createStudent(StudentsModel student) {
+    public StudentModel createStudent(StudentModel student) {
         if (studentRepository.existsByEmail(student.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
         }
         return studentRepository.save(student);
     }
 
-    public StudentsModel updateStudent(@NonNull String id, StudentsModel updatedStudent) {
-        StudentsModel student = studentRepository.findById(id)
+    public StudentModel updateStudent(@NonNull String id, StudentModel updatedStudent) {
+        StudentModel student = studentRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        student.setName(updatedStudent.getName());
-        student.setEmail(updatedStudent.getEmail());
+    
+        student.setUsersTypes(updatedStudent.getUsersTypes());
+        student.setPlanStatus(updatedStudent.getPlanStatus());
+        student.setPlanType(updatedStudent.getPlanType());
         return studentRepository.save(student);
     }
 
@@ -45,7 +46,7 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-    public StudentsModel getStudentById(@NonNull String id) {
+    public StudentModel getStudentById(@NonNull String id) {
         return studentRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Student not found"));
     }
@@ -57,7 +58,7 @@ public class StudentService {
     } 
 
     public boolean checkPlanStatus(@NonNull String studentId) {
-    StudentsModel student = studentRepository.findById(studentId)
+    StudentModel student = studentRepository.findById(studentId)
         .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         return student.isStudentPlanActive();
@@ -65,7 +66,7 @@ public class StudentService {
 
     //Renovar plano do aluno
     public void renewPlan(@NonNull String studentId, PlanType newPlanType, LocalDate newStartDate) {
-        StudentsModel student = studentRepository.findById(studentId).
+        StudentModel student = studentRepository.findById(studentId).
         orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         if (newPlanType == null || newStartDate == null) {

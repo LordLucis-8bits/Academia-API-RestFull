@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "Students")
-public class StudentsModel extends UserModel {
+public class StudentModel extends UserModel {
     private PlanType planType;
     private LocalDate planStart;
     private LocalDate planEnd;
-    private List<ClassModel> enrolledClassesIds;
+    private List<String> enrolledClassesIds;
     private PlanStatus planStatus;
 
     //Validar planos se esta ativo
