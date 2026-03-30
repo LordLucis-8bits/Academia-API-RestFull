@@ -1,8 +1,8 @@
-package com.academia.Repository;
+package com.academia.repository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import com.academia.Model.StudentModel;
+import com.academia.model.StudentModel;
 
 public interface StudentRepository extends MongoRepository<StudentModel, String> {
 

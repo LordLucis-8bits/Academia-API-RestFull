@@ -1,9 +1,9 @@
-package com.academia.Model;
+package com.academia.model;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.academia.Enum.PlanStatus;
-import com.academia.Enum.PlanType;
+import com.academia.enums.PlanStatus;
+import com.academia.enums.PlanType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,4 +1,4 @@
-package com.academia.Controller;
+package com.academia.controller;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.academia.Enum.PlanType;
-import com.academia.Model.ClassModel;
-import com.academia.Model.StudentModel;
-import com.academia.Service.StudentService;
+import com.academia.enums.PlanType;
+import com.academia.model.GymClassModel;
+import com.academia.model.StudentModel;
+import com.academia.service.StudentService;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
@@ -57,7 +57,7 @@ public class StudentController {
     //Listar aulas disponiveis para um aluno(ele só vera aulas disponiveis pra se matricular)
     @GetMapping("/classes/available")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<List<ClassModel>> getAvailableClasses() {
+    public ResponseEntity<List<GymClassModel>> getAvailableClasses() {
         return ResponseEntity.ok(studentService.listAvailableClasses());
     }
 

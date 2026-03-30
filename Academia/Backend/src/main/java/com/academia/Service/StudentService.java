@@ -1,15 +1,15 @@
-package com.academia.Service;
+package com.academia.service;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.academia.Enum.ClassStatus;
-import com.academia.Enum.PlanStatus;
-import com.academia.Enum.PlanType;
-import com.academia.Model.ClassModel;
-import com.academia.Model.StudentModel;
-import com.academia.Repository.ClassRepository;
-import com.academia.Repository.StudentRepository;
+import com.academia.enums.GymClassStatus;
+import com.academia.enums.PlanStatus;
+import com.academia.enums.PlanType;
+import com.academia.model.GymClassModel;
+import com.academia.model.StudentModel;
+import com.academia.repository.GymClassRepository;
+import com.academia.repository.StudentRepository;
 import org.springframework.lang.NonNull;
 
 @Service
@@ -19,7 +19,7 @@ public class StudentService {
     private StudentRepository studentRepository;
      
     @Autowired
-    private ClassRepository classRepository;
+    private GymClassRepository gymClassRepository;
 
     //CRUD BASIC OPERATIONS
     public StudentModel createStudent(StudentModel student) {
@@ -53,8 +53,8 @@ public class StudentService {
 
     //REGRAS DE NEGÓCIO
     //Alunos so ve aulas com status Disponivel
-    public List<ClassModel> listAvailableClasses() {
-        return classRepository.findByClassStatus(ClassStatus.AVAILABLE);
+    public List<GymClassModel> listAvailableClasses() {
+        return gymClassRepository.findByClassStatus(GymClassStatus.AVAILABLE);
     } 
 
     public boolean checkPlanStatus(@NonNull String studentId) {

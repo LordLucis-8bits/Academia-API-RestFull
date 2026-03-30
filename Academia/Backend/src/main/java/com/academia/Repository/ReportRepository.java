@@ -1,7 +1,7 @@
-package com.academia.Repository;
+package com.academia.repository;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import com.academia.Model.ReportModel;
+import com.academia.model.ReportModel;
 
 public interface ReportRepository extends MongoRepository<ReportModel, String> {
 

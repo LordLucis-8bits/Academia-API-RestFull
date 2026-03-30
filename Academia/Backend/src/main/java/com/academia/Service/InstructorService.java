@@ -1,9 +1,9 @@
-package com.academia.Service;
+package com.academia.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import com.academia.Model.InstructorModel;
-import com.academia.Repository.InstructorRepository;
+import com.academia.model.InstructorModel;
+import com.academia.repository.InstructorRepository;
 
 @Service
 public class InstructorService {

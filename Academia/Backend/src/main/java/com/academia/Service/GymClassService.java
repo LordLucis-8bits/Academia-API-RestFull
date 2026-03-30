@@ -1,17 +1,17 @@
-package com.academia.Service;
+package com.academia.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.academia.Enum.ClassStatus;
-import com.academia.Model.ClassModel;
-import com.academia.Model.InstructorModel;
-import com.academia.Repository.ClassRepository;
+import com.academia.enums.GymClassStatus;
+import com.academia.model.GymClassModel;
+import com.academia.model.InstructorModel;
+import com.academia.repository.GymClassRepository;
 import org.springframework.lang.NonNull;
 
 @Service
-public class ClassService {
+public class GymClassService {
 
     @Autowired
-    private ClassRepository classRepository;
+    private GymClassRepository gymClassRepository;
 
     @Autowired
     private ReportService reportService;
@@ -21,12 +21,12 @@ public class ClassService {
 
 
     //CRUD BASIC OPERATIONS
-    public ClassModel createClass(@NonNull ClassModel classModel) {
-        return classRepository.save(classModel);
+    public GymClassModel createClass(@NonNull GymClassModel classModel) {
+        return gymClassRepository.save(classModel);
     }
 
-    public ClassModel updateClass(@NonNull String id, ClassModel updateClass) {
-        ClassModel classModel = classRepository.findById(id)
+    public GymClassModel updateClass(@NonNull String id, GymClassModel updateClass) {
+        GymClassModel classModel = gymClassRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
         classModel.setTypeClass(classModel.getTypeClass());
@@ -35,18 +35,18 @@ public class ClassService {
         classModel.setInstructorId(classModel.getInstructorId());
         classModel.setClassStatus(classModel.getClassStatus());
         classModel.setEnrolledStudents(classModel.getEnrolledStudents());
-        return classRepository.save(classModel);
+        return gymClassRepository.save(classModel);
     }
 
     public void deleteClass(@NonNull String id) {
-        if (!classRepository.existsById(id)) {
+        if (!gymClassRepository.existsById(id)) {
             throw new IllegalArgumentException("Class not found");
         }
-        classRepository.deleteById(id);
+        gymClassRepository.deleteById(id);
     }
 
-    public ClassModel getClassById(@NonNull String id) {
-        return classRepository.findById(id)
+    public GymClassModel getClassById(@NonNull String id) {
+        return gymClassRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Class not found"));
     }
     
@@ -54,14 +54,14 @@ public class ClassService {
     //Iniciar uma aula
     public void startClass(@NonNull String classId, String instructorId) {
 
-        ClassModel classModel = classRepository.findById(classId)
+        GymClassModel classModel = gymClassRepository.findById(classId)
             .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
         if (!classModel.getInstructorId().equals(instructorId)) {
             throw new IllegalStateException("Instructor not authorized");
         }
 
-        if (classModel.getClassStatus() != ClassStatus.AVAILABLE) {
+        if (classModel.getClassStatus() != GymClassStatus.AVAILABLE) {
             throw new IllegalStateException("Class not available");
         }
 
@@ -69,29 +69,29 @@ public class ClassService {
         if (classModel.getTypeClass() != instructorModel.getSpecialty()) {
             throw new IllegalStateException("Instructor cannot control this type of class");
         }
-        classModel.setClassStatus(ClassStatus.INPROGRESS);
-        classRepository.save(classModel);
+        classModel.setClassStatus(GymClassStatus.INPROGRESS);
+        gymClassRepository.save(classModel);
     }
 
     //Finalizar uma aula
     public void finishClass(@NonNull String classId, String instructorId) {
 
-        ClassModel classModel = classRepository.findById(classId)
+        GymClassModel classModel = gymClassRepository.findById(classId)
             .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
         if (!classModel.getInstructorId().equals(instructorId)) {
             throw new IllegalStateException("Instructor not authorized");
         }
 
-        if (classModel.getClassStatus() != ClassStatus.INPROGRESS) {
+        if (classModel.getClassStatus() != GymClassStatus.INPROGRESS) {
             throw new IllegalStateException("Class not in progress");
         }
 
         if (classModel.getTypeClass() != instructorModel.getSpecialty()) {
             throw new IllegalStateException("Instructor cannot control this type of class");
         }
-        classModel.setClassStatus(ClassStatus.FINISHED);
-        classRepository.save(classModel);
+        classModel.setClassStatus(GymClassStatus.FINISHED);
+        gymClassRepository.save(classModel);
 
         reportService.generateClassReport(classModel);
     }

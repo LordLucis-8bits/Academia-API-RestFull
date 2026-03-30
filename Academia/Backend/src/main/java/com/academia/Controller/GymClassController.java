@@ -1,4 +1,4 @@
-package com.academia.Controller;
+package com.academia.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -12,42 +12,42 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.academia.Model.ClassModel;
-import com.academia.Model.UserModel;
-import com.academia.Service.ClassService;
+import com.academia.model.GymClassModel;
+import com.academia.model.UserModel;
+import com.academia.service.GymClassService;
 
 @RestController
 @RequestMapping("/classes")
-public class ClassController {
+public class GymClassController {
     
     @Autowired
-    private ClassService classService;
+    private GymClassService gymClassService;
     
     //CRUD BASICO AULA
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ClassModel> createClass(@NonNull ClassModel classModel) {
-        ClassModel createdClass = classService.createClass(classModel);
+    public ResponseEntity<GymClassModel> createClass(@NonNull GymClassModel classModel) {
+        GymClassModel createdClass = gymClassService.createClass(classModel);
         return ResponseEntity.ok(createdClass);
     }
 
     @PutMapping("/{id}/update")
     @PreAuthorize("hasRole('ADMIN', 'STUDENT')")
-    public ResponseEntity<ClassModel> updateClass(@NonNull @PathVariable String id, ClassModel updateClass) {
-        return ResponseEntity.ok(classService.updateClass(id, updateClass));
+    public ResponseEntity<GymClassModel> updateClass(@NonNull @PathVariable String id, GymClassModel updateClass) {
+        return ResponseEntity.ok(gymClassService.updateClass(id, updateClass));
     }
 
     @DeleteMapping("/{id}/delete")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteClass(@NonNull @PathVariable String id) {
-        classService.deleteClass(id);
+        gymClassService.deleteClass(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN, INSTRUCTOR, STUDENT')")
-    public ResponseEntity<ClassModel> getClassById(@NonNull @PathVariable String id) {
-        ClassModel classModel = classService.getClassById(id);
+    public ResponseEntity<GymClassModel> getClassById(@NonNull @PathVariable String id) {
+        GymClassModel classModel = gymClassService.getClassById(id);
         return ResponseEntity.ok(classModel);
     }
 
@@ -56,7 +56,7 @@ public class ClassController {
     @PatchMapping("/{classId}/start")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<Void> startClass(@NonNull @PathVariable String classId, @AuthenticationPrincipal UserModel Instructor) {
-        classService.startClass(classId, Instructor.getId());
+        gymClassService.startClass(classId, Instructor.getId());
         return ResponseEntity.ok().build();
     }
 
@@ -64,7 +64,7 @@ public class ClassController {
     @PatchMapping("/{classId}/finish")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<Void> finishClass(@NonNull @PathVariable String classId, @AuthenticationPrincipal UserModel Instructor) {
-        classService.finishClass(classId, Instructor.getId());
+        gymClassService.finishClass(classId, Instructor.getId());
         return ResponseEntity.ok().build(); 
     }
 }

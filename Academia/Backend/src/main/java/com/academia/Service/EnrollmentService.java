@@ -1,14 +1,14 @@
-package com.academia.Service;
+package com.academia.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import com.academia.Enum.ClassStatus;
-import com.academia.Model.ClassModel;
-import com.academia.Model.EnrollmentModel;
-import com.academia.Model.StudentModel;
-import com.academia.Repository.ClassRepository;
-import com.academia.Repository.EnrollmentRepository;
-import com.academia.Repository.StudentRepository;
+import com.academia.enums.GymClassStatus;
+import com.academia.model.GymClassModel;
+import com.academia.model.EnrollmentModel;
+import com.academia.model.StudentModel;
+import com.academia.repository.GymClassRepository;
+import com.academia.repository.EnrollmentRepository;
+import com.academia.repository.StudentRepository;
 
 @Service
 public class EnrollmentService {
@@ -17,7 +17,7 @@ public class EnrollmentService {
     StudentRepository studentRepository;
 
     @Autowired
-    ClassRepository classRepository;
+    GymClassRepository gymClassRepository;
 
     @Autowired
     EnrollmentRepository enrollmentRepository;
@@ -26,7 +26,7 @@ public class EnrollmentService {
         StudentModel studentsModel = studentRepository.findById(studentId)
         .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
-        ClassModel classModel = classRepository.findById(classId)
+        GymClassModel classModel = gymClassRepository.findById(classId)
         .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
         //Verifica se o plano do estudante está ativo
@@ -40,7 +40,7 @@ public class EnrollmentService {
         }
 
         //Verifica se a aula esta com status disponível
-        if (classModel.getClassStatus() != ClassStatus.AVAILABLE) {
+        if (classModel.getClassStatus() != GymClassStatus.AVAILABLE) {
             throw new IllegalStateException("Class is not available for enrollment");
         }
 
@@ -54,7 +54,7 @@ public class EnrollmentService {
         enrollmentRepository.save(enrollmentModel);
 
         classModel.getEnrolledStudents().add(studentId);
-        classRepository.save(classModel);
+        gymClassRepository.save(classModel);
     }
 }
           

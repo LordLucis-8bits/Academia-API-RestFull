@@ -1,9 +1,9 @@
-package com.academia.Model;
+package com.academia.model;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.academia.Enum.UserType;
+import com.academia.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

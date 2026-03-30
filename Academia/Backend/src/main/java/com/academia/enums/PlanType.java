@@ -1,4 +1,4 @@
-package com.academia.Enum;
+package com.academia.enums;
 
 public enum PlanType{
     DAILY,
