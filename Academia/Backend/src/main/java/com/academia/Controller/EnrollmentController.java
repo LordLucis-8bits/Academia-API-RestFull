@@ -1,22 +1,24 @@
 package com.academia.controller;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.academia.service.EnrollmentService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/enrollments")
+@RequiredArgsConstructor
 public class EnrollmentController {
 
-    @Autowired
-    private EnrollmentService enrollmentService;
+    private final EnrollmentService enrollmentService;
 
     @PostMapping("/enroll")
-    public ResponseEntity<String> enrollStudent(@RequestParam @NonNull String studentId, @RequestParam @NonNull String classId) {
+    public ResponseEntity<String> enrollStudent(@RequestParam String studentId, @RequestParam String classId) {
         try {
             enrollmentService.enrollStudent(studentId, classId);
             return ResponseEntity.status(202).body("Student Successfully enrolled");

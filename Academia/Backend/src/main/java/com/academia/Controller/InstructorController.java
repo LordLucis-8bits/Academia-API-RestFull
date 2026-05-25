@@ -1,49 +1,60 @@
 package com.academia.controller;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.academia.model.InstructorModel;
+
+import com.academia.dto.instructor.InstructorResponseDTO;
+import com.academia.dto.updateRequest.UpdateRequestInstructorDTO;
 import com.academia.service.InstructorService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/instructors")
+@RequiredArgsConstructor
 public class InstructorController {
 
-    @Autowired
-    private InstructorService instructorService;
-
-    //CRUD BASICO INSTRUTOR
-    @PostMapping
+    private final InstructorService instructorService;
+    
+    @PutMapping("/{userId}/{instructorId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<InstructorModel> createInstructor(@NonNull InstructorModel instructor) {
-        return ResponseEntity.ok(instructorService.createInstructor(instructor));
+    public ResponseEntity<InstructorResponseDTO> updateInstructor(
+        @PathVariable String userId, 
+        @PathVariable String instructorId, 
+        @RequestBody @Valid UpdateRequestInstructorDTO request) {
+        InstructorResponseDTO response = instructorService.updateInstructor(userId, instructorId, request.getUser(), request.getInstructor());
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}/update")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<InstructorModel> updateInstructor(@NonNull @PathVariable String id, InstructorModel updateInstructor) {
-        return ResponseEntity.ok(instructorService.updateInstructor(id, updateInstructor));
-    }
-
-    @DeleteMapping("/{id}/delete")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteInstructor(@NonNull @PathVariable String id) {
+    public ResponseEntity<Void> deleteInstructor(@PathVariable String id) {
         instructorService.deleteInstructor(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INSTRUCTOR')")
-    public ResponseEntity<InstructorModel> getInstructorById(@NonNull @PathVariable String id) {
-        InstructorModel instructor = instructorService.getInstructorById(id);
-        return ResponseEntity.ok(instructor);
+    @ResponseStatus(HttpStatus.OK)
+    public InstructorResponseDTO getInstructorById(@PathVariable String id) {
+        return instructorService.getInstructorById(id);
+    }
+
+    //O instrutor logado vé suas informações
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @ResponseStatus(HttpStatus.OK)
+    public InstructorResponseDTO getCurrentInstructorInfo() {
+        return instructorService.getCurrentInstructorInfo();
     }
 }

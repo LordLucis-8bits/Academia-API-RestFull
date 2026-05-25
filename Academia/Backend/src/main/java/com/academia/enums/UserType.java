@@ -1,7 +1,7 @@
 package com.academia.enums;
 
 public enum UserType {
-    STUDENTS,
+    STUDENT,
     INSTRUCTOR,
     ADMIN
 }

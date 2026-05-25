@@ -1,41 +1,55 @@
 package com.academia.service;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+
+import com.academia.dto.gymClass.CreateGymClassDTO;
+import com.academia.dto.gymClass.GymClassResponseDTO;
+import com.academia.dto.gymClass.UpdateGymClassDTO;
 import com.academia.enums.GymClassStatus;
 import com.academia.model.GymClassModel;
 import com.academia.model.InstructorModel;
 import com.academia.repository.GymClassRepository;
-import org.springframework.lang.NonNull;
+import com.academia.repository.InstructorRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class GymClassService {
 
-    @Autowired
-    private GymClassRepository gymClassRepository;
+    private final GymClassRepository gymClassRepository;
 
-    @Autowired
-    private ReportService reportService;
+    private final ReportService reportService;
 
-    @Autowired
-    private InstructorModel instructorModel;
-
+    private final InstructorRepository instructorRepository;
 
     //CRUD BASIC OPERATIONS
-    public GymClassModel createClass(@NonNull GymClassModel classModel) {
-        return gymClassRepository.save(classModel);
+    public GymClassResponseDTO createClass(CreateGymClassDTO dto) {
+        GymClassModel gymClass = new GymClassModel();
+        gymClass.setTypeClass(dto.getTypeClass());
+        gymClass.setSchedule(dto.getSchedule());
+        gymClass.setInstructorId(dto.getInstructorId());
+        gymClass.setStudentsLimit(dto.getStudentsLimit());
+        gymClass.setClassStatus(GymClassStatus.AVAILABLE);
+
+        gymClassRepository.save(gymClass);
+
+        return new GymClassResponseDTO(gymClass);
     }
 
-    public GymClassModel updateClass(@NonNull String id, GymClassModel updateClass) {
-        GymClassModel classModel = gymClassRepository.findById(id)
+    public GymClassResponseDTO updateClass(@NonNull String id, UpdateGymClassDTO dto) {
+        GymClassModel gymClass = gymClassRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
-        classModel.setTypeClass(classModel.getTypeClass());
-        classModel.setSchedule(classModel.getSchedule());
-        classModel.setStudentsLimit(classModel.getStudentsLimit());
-        classModel.setInstructorId(classModel.getInstructorId());
-        classModel.setClassStatus(classModel.getClassStatus());
-        classModel.setEnrolledStudents(classModel.getEnrolledStudents());
-        return gymClassRepository.save(classModel);
+        gymClass.setTypeClass(gymClass.getTypeClass());
+        gymClass.setStudentsLimit(gymClass.getStudentsLimit());
+        gymClass.setInstructorId(gymClass.getInstructorId());
+        gymClass.setClassStatus(gymClass.getClassStatus());
+
+        gymClassRepository.save(gymClass);
+
+        return new GymClassResponseDTO(gymClass);
     }
 
     public void deleteClass(@NonNull String id) {
@@ -45,14 +59,20 @@ public class GymClassService {
         gymClassRepository.deleteById(id);
     }
 
-    public GymClassModel getClassById(@NonNull String id) {
-        return gymClassRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+    public GymClassResponseDTO getClassById(@NonNull String id) {
+        GymClassModel gymClass = gymClassRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+        
+        return new GymClassResponseDTO(gymClass);
     }
     
-    //REGRAS DE NEGÓCIO
+    ///////////////////////////////REGRAS DE NEGÓCIO////////////////////////////////
+
     //Iniciar uma aula
     public void startClass(@NonNull String classId, String instructorId) {
+
+        InstructorModel instructorModel = instructorRepository.findById(instructorId)
+            .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
 
         GymClassModel classModel = gymClassRepository.findById(classId)
             .orElseThrow(() -> new IllegalArgumentException("Class not found"));
@@ -76,23 +96,27 @@ public class GymClassService {
     //Finalizar uma aula
     public void finishClass(@NonNull String classId, String instructorId) {
 
-        GymClassModel classModel = gymClassRepository.findById(classId)
+        InstructorModel instructor = instructorRepository.findById(instructorId)
+            .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
+
+        GymClassModel gymClass = gymClassRepository.findById(classId)
             .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
-        if (!classModel.getInstructorId().equals(instructorId)) {
-            throw new IllegalStateException("Instructor not authorized");
-        }
-
-        if (classModel.getClassStatus() != GymClassStatus.INPROGRESS) {
+        if (gymClass.getClassStatus() != GymClassStatus.INPROGRESS) {
             throw new IllegalStateException("Class not in progress");
         }
 
-        if (classModel.getTypeClass() != instructorModel.getSpecialty()) {
+        if (!gymClass.getInstructorId().equals(instructorId)) {
+            throw new IllegalStateException("Instructor not authorized");
+        }
+
+        if (gymClass.getTypeClass() != instructor.getSpecialty()) {
             throw new IllegalStateException("Instructor cannot control this type of class");
         }
-        classModel.setClassStatus(GymClassStatus.FINISHED);
-        gymClassRepository.save(classModel);
 
-        reportService.generateClassReport(classModel);
+        gymClass.setClassStatus(GymClassStatus.FINISHED);
+        gymClassRepository.save(gymClass);
+        
+        reportService.generateClassReport(gymClass);
     }
 }

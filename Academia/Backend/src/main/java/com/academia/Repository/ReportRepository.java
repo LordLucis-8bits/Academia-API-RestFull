@@ -1,5 +1,7 @@
 package com.academia.repository;
+
 import java.util.List;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import com.academia.model.ReportModel;
 

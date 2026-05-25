@@ -1,6 +1,6 @@
 package com.academia.enums;
 
-public enum PlanType{
+public enum PlanType {
     DAILY,
     MONTHLY,
     QUARTERLY,
