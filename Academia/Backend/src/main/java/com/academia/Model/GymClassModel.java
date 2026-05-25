@@ -1,11 +1,11 @@
 package com.academia.model;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.academia.dto.report.StudentAttendanceDTO;
+import com.academia.enums.GymClassStatus;
 import com.academia.enums.TypeClass;
 
 import jakarta.validation.constraints.NotNull;
@@ -16,23 +16,22 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "Reports")
-public class ReportModel {
+@Document(collection = "GymClass")
+public class GymClassModel {
     
     @Id
     private String id;
+
+    @NotNull
+    private TypeClass typeClass;
+
+    @NotNull
+    private LocalDateTime schedule;
     
-    @NotNull
-    private String classId;
-
-    @NotNull
-    private TypeClass nameClass;
-
     @NotNull
     private String instructorId;
 
-    private int totalStudents;
+    private int studentsLimit;
 
-    private List<StudentAttendanceDTO> studentAttendances;
-
+    private GymClassStatus classStatus;
 }

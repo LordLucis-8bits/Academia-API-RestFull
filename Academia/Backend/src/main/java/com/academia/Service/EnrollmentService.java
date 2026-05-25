@@ -1,46 +1,51 @@
-package com.academia.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+package com.academia.service;
+
+import java.time.LocalDateTime;
+
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import com.academia.Enum.ClassStatus;
-import com.academia.Model.ClassModel;
-import com.academia.Model.EnrollmentModel;
-import com.academia.Model.StudentModel;
-import com.academia.Repository.ClassRepository;
-import com.academia.Repository.EnrollmentRepository;
-import com.academia.Repository.StudentRepository;
+
+import com.academia.dto.enrollment.EnrollmentResponseDTO;
+import com.academia.enums.GymClassStatus;
+import com.academia.model.EnrollmentModel;
+import com.academia.model.GymClassModel;
+import com.academia.model.StudentModel;
+import com.academia.repository.EnrollmentRepository;
+import com.academia.repository.GymClassRepository;
+import com.academia.repository.StudentRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class EnrollmentService {
 
-    @Autowired
-    StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
-    @Autowired
-    ClassRepository classRepository;
+    private final GymClassRepository gymClassRepository;
 
-    @Autowired
-    EnrollmentRepository enrollmentRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
-    public void enrollStudent(@NonNull String studentId, @NonNull String classId) {
-        StudentModel studentsModel = studentRepository.findById(studentId)
+    public EnrollmentResponseDTO enrollStudent(@NonNull String studentId, @NonNull String classId) {
+        StudentModel student = studentRepository.findById(studentId)
         .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
-        ClassModel classModel = classRepository.findById(classId)
+        GymClassModel gymClass = gymClassRepository.findById(classId)
         .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
         //Verifica se o plano do estudante está ativo
-        if (!studentsModel.isStudentPlanActive()) {
+        if (!student.isStudentPlanActive()) {
             throw new IllegalStateException("Inactive plan");
         }
 
         //Verifica se a aula está cheia
-        if (classModel.getEnrolledStudents().size() >= classModel.getStudentsLimit()) {
+        long enrolledCount = enrollmentRepository.countByClassId(classId);
+        if (enrolledCount >= gymClass.getStudentsLimit()) {
             throw new IllegalStateException("Class is full");
         }
 
         //Verifica se a aula esta com status disponível
-        if (classModel.getClassStatus() != ClassStatus.AVAILABLE) {
+        if (gymClass.getClassStatus() != GymClassStatus.AVAILABLE) {
             throw new IllegalStateException("Class is not available for enrollment");
         }
 
@@ -49,12 +54,14 @@ public class EnrollmentService {
             throw new IllegalStateException("Student already enrolled in this class");
         }
 
-        //Instanciando o modelo de matrícula e salvando no repositório
-        EnrollmentModel enrollmentModel = new EnrollmentModel(studentId, classId);
-        enrollmentRepository.save(enrollmentModel);
+        EnrollmentModel enrollment = new EnrollmentModel();
+        enrollment.setRegistrationDate(LocalDateTime.now());
+        enrollment.setStudentId(studentId);
+        enrollment.setClassId(classId);
+    
+        enrollmentRepository.save(enrollment);
 
-        classModel.getEnrolledStudents().add(studentId);
-        classRepository.save(classModel);
+        return new EnrollmentResponseDTO(enrollment);
     }
 }
           

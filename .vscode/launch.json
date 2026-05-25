@@ -6,16 +6,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
             "name": "AcademiaApplication",
             "request": "launch",
-            "mainClass": "com.academia.Academia.AcademiaApplication",
+            "mainClass": "com.academia.AcademiaApplication",
             "projectName": "Academia"
-        }
+        },
     ]
 }
