@@ -1,0 +1,16 @@
+package com.academia.enrollment;
+
+import java.util.List;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface EnrollmentRepository extends MongoRepository<EnrollmentModel, String> {
+    
+    List<EnrollmentModel> findByStudentId(String studentId);
+
+    List<EnrollmentModel> findByClassId(String id);
+
+    boolean existsByStudentIdAndClassId(String studentId, String classId);
+
+    long countByClassId(String classId);
+}
