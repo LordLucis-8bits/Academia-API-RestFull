@@ -38,22 +38,22 @@ public class AdminService {
         if (dto.getRole() == UserType.STUDENT) {
             //o tipo de plano é obrigatório para estudantes
             if (dto.getPlanType() == null) { 
-                throw new IllegalArgumentException("Plan type should not be provided for students at creation"); 
+                throw new IllegalArgumentException("Plan type should not be provided for student at creation"); 
             }
             //o tipo de especialidade não deve ser fornecido para estudantes
             if (dto.getSpecialty() != null) { 
-                throw new IllegalArgumentException("Specialty should not be provided for students"); 
+                throw new IllegalArgumentException("Specialty should not be provided for student"); 
             }
 
         } else if (dto.getRole() == UserType.INSTRUCTOR) {
             //o instrutor deve ter uma especialidade
             if (dto.getSpecialty() == null) {
-                throw new IllegalArgumentException("Specialty is required for instructors at creation");
+                throw new IllegalArgumentException("Specialty is required for instructor at creation");
             }
 
             //o tipo de plano não deve ser fornecido para instrutores
             if (dto.getPlanType() != null) {
-                throw new IllegalArgumentException("Plan type should not be provided for instructors at creation");
+                throw new IllegalArgumentException("Plan type should not be provided for instructor at creation");
             }    
         }
     }
