@@ -3,6 +3,8 @@ package com.academia.auth;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.academia.shared.enums.UserType;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -25,9 +27,10 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(String email) {
+    public String generateToken(String email, UserType role) {
         return Jwts.builder()
-        .subject(email)                                                 
+        .subject(email)
+        .claim("role", role.name())                                                 
         .expiration(new Date(System.currentTimeMillis() + EXPIRATION)) 
         .signWith(getSigningKey())
         .compact();
