@@ -3,6 +3,7 @@ package com.academia.admin;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.academia.instructor.InstructorModel;
@@ -24,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
+
+    private final BCryptPasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
 
@@ -70,7 +73,7 @@ public class AdminService {
         user.setName(dto.getName());
         user.setAge(dto.getAge());
         user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword())); //Corrigindo para que a senha retorne hash antes de ir salva no MongoDB
         user.setRole(dto.getRole());
 
         userRepository.save(user);
