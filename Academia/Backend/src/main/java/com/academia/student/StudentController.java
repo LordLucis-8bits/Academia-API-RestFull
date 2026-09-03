@@ -45,7 +45,7 @@ public class StudentController {
 
     //Admin obtem informações do aluno por ID
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', STUDENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable String id) {
         StudentResponseDTO response = studentService.getStudentById(id);
         return ResponseEntity.ok(response);
