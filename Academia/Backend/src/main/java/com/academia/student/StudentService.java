@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.academia.auth.SecurityUtils;
 import com.academia.enrollment.EnrollmentModel;
 import com.academia.enrollment.EnrollmentRepository;
+import com.academia.enrollment.dto.EnrollmentResponseDTO;
 import com.academia.gymClass.GymClassModel;
 import com.academia.gymClass.GymClassRepository;
 import com.academia.gymClass.dto.GymClassResponseDTO;
@@ -113,8 +114,14 @@ public class StudentService {
     } 
 
     //Lista de aulas matriculada do aluno
-    public List<EnrollmentModel> getStudentEnrollments(@NonNull String studentId) {
-        return enrollmentRepository.findByStudentId(studentId);
+    public List<EnrollmentResponseDTO> getStudentEnrollments(@NonNull String studentId) {
+        StudentModel student = studentRepository.findById(studentId)
+        .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        List<EnrollmentModel> enrollments = enrollmentRepository.findByStudentId(student.getId());
+        return enrollments.stream()
+        .map(EnrollmentResponseDTO::new)
+        .toList();
     }
 
     //Checar se status do plano 

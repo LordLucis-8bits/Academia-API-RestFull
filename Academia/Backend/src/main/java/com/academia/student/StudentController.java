@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.academia.enrollment.dto.EnrollmentResponseDTO;
 import com.academia.gymClass.dto.GymClassResponseDTO;
 import com.academia.shared.enums.PlanType;
 import com.academia.student.dto.StudentResponseDTO;
@@ -65,6 +66,14 @@ public class StudentController {
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<List<GymClassResponseDTO>> listAvailableClasses() {
         List<GymClassResponseDTO> response = studentService.listAvailableClasses();
+        return ResponseEntity.ok(response);
+    }
+
+    //Listar aulas matriculadas do aluno
+    @GetMapping("/{studentId}/enrollments")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
+    public ResponseEntity<List<EnrollmentResponseDTO>> getStudentEnrollments(@PathVariable String studentId) {
+        List<EnrollmentResponseDTO> response = studentService.getStudentEnrollments(studentId);
         return ResponseEntity.ok(response);
     }
 
