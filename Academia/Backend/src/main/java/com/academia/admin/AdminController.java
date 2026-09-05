@@ -1,15 +1,20 @@
 package com.academia.admin;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.academia.instructor.dto.InstructorResponseDTO;
 import com.academia.shared.dto.CreateUserDTO;
 import com.academia.shared.dto.UserResponseDTO;
+import com.academia.student.dto.StudentResponseDTO;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +29,24 @@ public class AdminController {
     //Admin cria um novo usuario
     @PostMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserResponseDTO createUsers(@RequestBody @Valid CreateUserDTO dto) {
-        UserResponseDTO response = adminService.createUser(dto);
-        return response;
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid CreateUserDTO request) {
+        UserResponseDTO response = adminService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    //Lista alunos cadastrados
+    @GetMapping("/students")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<StudentResponseDTO>> listAllStudents() {
+        List<StudentResponseDTO> response = adminService.listAllStudents();
+        return ResponseEntity.ok(response);
+    }
+
+    //Lista instrutores cadastrados
+    @GetMapping("/instructors")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<InstructorResponseDTO>> listAllInstructors() {
+        List<InstructorResponseDTO> response = adminService.listAllInstructors();
+        return ResponseEntity.ok(response);
     }
 }
