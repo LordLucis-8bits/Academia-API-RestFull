@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.academia.enrollment.EnrollmentModel;
 import com.academia.enrollment.EnrollmentRepository;
 import com.academia.gymClass.GymClassModel;
+import com.academia.report.dto.ClassAttendanceReportDTO;
 import com.academia.report.dto.StudentAttendanceDTO;
 import com.academia.shared.UserModel;
 import com.academia.shared.UserRepository;
@@ -56,5 +57,13 @@ public class ReportService {
         report.setStudentAttendances(studentAttendance);
 
         reportRepository.save(report);
+    }
+
+    //Pegar a lista de relatórios de aulas
+    public List<ClassAttendanceReportDTO> getAllReports() {
+        List<ReportModel> reports = reportRepository.findAll();
+        return reports.stream()
+        .map(ClassAttendanceReportDTO::new)
+        .toList();
     }
 }
