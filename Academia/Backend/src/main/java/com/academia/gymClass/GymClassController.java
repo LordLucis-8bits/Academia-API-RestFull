@@ -1,5 +1,7 @@
 package com.academia.gymClass;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,6 +57,13 @@ public class GymClassController {
         GymClassResponseDTO response = gymClassService.getClassById(id);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/my-classes")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public List<GymClassResponseDTO> getAllClasses(@AuthenticationPrincipal UserModel instructor) {
+        return gymClassService.getAllClasses(instructor.getId());
+    } 
+
 
     //REGRA DE NEGÓCIO
     //Iniciar uma aula

@@ -62,7 +62,8 @@ public class ReportService {
     //Pegar a lista de relatórios de aulas
     public List<ClassAttendanceReportDTO> getAllReports() {
         List<ReportModel> reports = reportRepository.findAll();
-        return reports.stream()
+        return reports
+        .stream()
         .map(ClassAttendanceReportDTO::new)
         .toList();
     }

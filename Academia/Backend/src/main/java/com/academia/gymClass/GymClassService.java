@@ -1,5 +1,7 @@
 package com.academia.gymClass;
 
+import java.util.List;
+
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +80,15 @@ public class GymClassService {
         .orElseThrow(() -> new IllegalArgumentException("Class not found"));
         
         return new GymClassResponseDTO(gymClass);
+    }
+
+    //Lista todas as aulas de um instrutor específico
+    public List<GymClassResponseDTO> getAllClasses(String instructorId) {
+        List<GymClassModel> gymClasses = gymClassRepository.findByInstructorId(instructorId);
+        return gymClasses
+        .stream()
+        .map(GymClassResponseDTO::new)
+        .toList();
     }
     
     ///////////////////////////////REGRAS DE NEGÓCIO////////////////////////////////
