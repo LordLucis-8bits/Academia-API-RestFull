@@ -84,7 +84,7 @@ public class GymClassService {
 
     //Lista todas as aulas de um instrutor específico
     public List<GymClassResponseDTO> getAllClasses(String instructorId) {
-        List<GymClassModel> gymClasses = gymClassRepository.findByInstructorId(instructorId);
+        List<GymClassModel> gymClasses = gymClassRepository.findByUserId(instructorId);
         return gymClasses
         .stream()
         .map(GymClassResponseDTO::new)
@@ -94,15 +94,15 @@ public class GymClassService {
     ///////////////////////////////REGRAS DE NEGÓCIO////////////////////////////////
 
     //Iniciar uma aula
-    public void startClass(@NonNull String classId, String instructorId) {
+    public void startClass(@NonNull String classId, String userId) {
 
-        InstructorModel instructorModel = instructorRepository.findById(instructorId)
-            .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
+        InstructorModel instructor = instructorRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
 
         GymClassModel classModel = gymClassRepository.findById(classId)
-            .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
-        if (!classModel.getInstructorId().equals(instructorId)) {
+        if (!classModel.getInstructorId().equals(instructor.getId())) {
             throw new IllegalStateException("Instructor not authorized");
         }
 
@@ -111,7 +111,7 @@ public class GymClassService {
         }
 
         //Instrutor so iniciar e finalizar seu tipo de aula
-        if (classModel.getTypeClass() != instructorModel.getSpecialty()) {
+        if (classModel.getTypeClass() != instructor.getSpecialty()) {
             throw new IllegalStateException("Instructor cannot control this type of class");
         }
         classModel.setClassStatus(GymClassStatus.INPROGRESS);
@@ -122,17 +122,17 @@ public class GymClassService {
     public void finishClass(@NonNull String classId, @NonNull String instructorId) {
 
         InstructorModel instructor = instructorRepository.findById(instructorId)
-            .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
 
         GymClassModel gymClass = gymClassRepository.findById(classId)
-            .orElseThrow(() -> new IllegalArgumentException("Class not found"));
-
-        if (gymClass.getClassStatus() != GymClassStatus.INPROGRESS) {
-            throw new IllegalStateException("Class not in progress");
-        }
+        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
         if (!gymClass.getInstructorId().equals(instructorId)) {
             throw new IllegalStateException("Instructor not authorized");
+        }
+
+        if (gymClass.getClassStatus() != GymClassStatus.INPROGRESS) {
+            throw new IllegalStateException("Class not in progress");
         }
 
         if (gymClass.getTypeClass() != instructor.getSpecialty()) {

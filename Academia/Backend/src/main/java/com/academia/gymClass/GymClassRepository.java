@@ -1,6 +1,7 @@
 package com.academia.gymClass;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -11,7 +12,9 @@ public interface GymClassRepository extends MongoRepository<GymClassModel, Strin
     
     List<GymClassModel> findByTypeClass(TypeClass typeClass);
 
-    List<GymClassModel> findByInstructorId(String instructorId);
+    Optional<GymClassModel> findByInstructorId(String classId);
+
+    List<GymClassModel> findByUserId(String userId);
 
     List<GymClassModel> findByClassStatus(GymClassStatus classStatus);
     
