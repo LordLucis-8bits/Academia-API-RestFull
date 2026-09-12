@@ -94,9 +94,9 @@ public class GymClassService {
     ///////////////////////////////REGRAS DE NEGÓCIO////////////////////////////////
 
     //Iniciar uma aula
-    public void startClass(@NonNull String classId, String userId) {
+    public void startClass(@NonNull String classId, @NonNull String userId) {
 
-        InstructorModel instructor = instructorRepository.findById(userId)
+        InstructorModel instructor = instructorRepository.findByUserId(userId)
         .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
 
         GymClassModel classModel = gymClassRepository.findById(classId)
@@ -119,15 +119,15 @@ public class GymClassService {
     }
 
     //Finalizar uma aula
-    public void finishClass(@NonNull String classId, @NonNull String instructorId) {
+    public void finishClass(@NonNull String classId, @NonNull String userId) {
 
-        InstructorModel instructor = instructorRepository.findById(instructorId)
+        InstructorModel instructor = instructorRepository.findByUserId(userId)
         .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
 
         GymClassModel gymClass = gymClassRepository.findById(classId)
         .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
-        if (!gymClass.getInstructorId().equals(instructorId)) {
+        if (!gymClass.getInstructorId().equals(userId)) {
             throw new IllegalStateException("Instructor not authorized");
         }
 
