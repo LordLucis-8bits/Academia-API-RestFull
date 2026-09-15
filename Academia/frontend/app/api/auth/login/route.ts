@@ -1,5 +1,10 @@
 import { cookies } from "next/headers";
 
+function decodeJwtPayload(token: string) {const payloadBase64 = token.split('.')[1];
+    const payloadJson = Buffer.from(payloadBase64, 'base64').toString('utf-8');
+    return JSON.parse(payloadJson);
+}
+
 export async function POST(request: Request) {
     const { email, password } = await request.json();
 
@@ -13,7 +18,7 @@ export async function POST(request: Request) {
         return Response.json({ error: "Invalid credentials" }, { status: 401 })
     }
 
-    const token = await response.json();
+    const token = await response.text();
 
     const cookieStore = await cookies();
     cookieStore.set("token", token, {
@@ -23,5 +28,7 @@ export async function POST(request: Request) {
         path: "/"
     })
 
-    return Response.json({ message: "Login successful" }, { status: 200 })
+    const payload = decodeJwtPayload(token);
+
+    return Response.json({ role: payload.role })
 }
