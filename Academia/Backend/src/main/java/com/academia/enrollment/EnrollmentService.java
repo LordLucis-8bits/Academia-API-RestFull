@@ -1,6 +1,8 @@
 package com.academia.enrollment;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -59,7 +61,20 @@ public class EnrollmentService {
     
         enrollmentRepository.save(enrollment);
 
-        return new EnrollmentResponseDTO(enrollment);
+        return new EnrollmentResponseDTO(enrollment, gymClass);
+    }
+
+    /*Busca as matriculas de um aluno pela Id do aluno e 
+    retorna uma lista comparando a matricula com aula para retornar ela*/ 
+    public List<EnrollmentResponseDTO> getStudentEnrollments(@NonNull String studentId) {
+        List<EnrollmentModel> enrollments = enrollmentRepository.findByStudentId(studentId);
+
+        return enrollments.stream()
+        .map(enrollment -> gymClassRepository.findById(enrollment.getClassId())
+        .map(gymClass -> new EnrollmentResponseDTO(enrollment, gymClass))
+        .orElse(null))
+        .filter(Objects::nonNull)
+        .toList();
     }
 }
           

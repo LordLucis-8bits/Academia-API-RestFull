@@ -10,7 +10,7 @@ async function getStudentInfo() {
     }
 
     const response = await fetch("http://localhost:3000/students/me", {
-        headers: { "Authorization": `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
         cache: "no-store"
     });
 

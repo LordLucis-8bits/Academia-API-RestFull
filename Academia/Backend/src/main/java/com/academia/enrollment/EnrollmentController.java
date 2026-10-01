@@ -1,11 +1,17 @@
 package com.academia.enrollment;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.academia.enrollment.dto.EnrollmentResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,5 +32,15 @@ public class EnrollmentController {
         } catch (IllegalStateException e) {
             return ResponseEntity.status(409).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/student/{studentId}") 
+    public ResponseEntity<List<EnrollmentResponseDTO>> getStudentEnrollments(@PathVariable  @NonNull String studentId) {
+        try {
+            return ResponseEntity.ok(enrollmentService.getStudentEnrollments(studentId));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(null);
+        }
+        
     }
 }
