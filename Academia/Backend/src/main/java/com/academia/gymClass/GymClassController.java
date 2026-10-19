@@ -60,7 +60,7 @@ public class GymClassController {
 
     @GetMapping("/my-classes")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public List<GymClassResponseDTO> getAllClasses(@AuthenticationPrincipal UserModel instructor) {
+    public List<GymClassModel> getAllClasses(@AuthenticationPrincipal UserModel instructor) {
         return gymClassService.getAllClasses(instructor.getId());
     } 
 

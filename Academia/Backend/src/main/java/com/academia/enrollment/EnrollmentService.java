@@ -17,7 +17,7 @@ import com.academia.student.StudentRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor 
 public class EnrollmentService {
 
     private final StudentRepository studentRepository;

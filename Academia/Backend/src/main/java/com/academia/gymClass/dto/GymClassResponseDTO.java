@@ -16,6 +16,7 @@ public class GymClassResponseDTO {
     private String instructorId;
     private int studentsLimit;
     private GymClassStatus classStatus;
+    private long enrolledCount;
 
     public GymClassResponseDTO() {}
 
@@ -27,4 +28,15 @@ public class GymClassResponseDTO {
         this.studentsLimit = model.getStudentsLimit();
         this.classStatus = model.getClassStatus();
     }
+
+    public GymClassResponseDTO(GymClassModel model, long enrolledCount) {
+        this.id = model.getId();
+        this.typeClass = model.getTypeClass();
+        this.schedule = model.getSchedule();
+        this.instructorId = model.getInstructorId();
+        this.studentsLimit = model.getStudentsLimit();
+        this.classStatus = model.getClassStatus();
+        this.enrolledCount = enrolledCount;
+    }
+
 }

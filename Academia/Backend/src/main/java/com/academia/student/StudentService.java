@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.academia.auth.SecurityUtils;
+import com.academia.enrollment.EnrollmentRepository;
 import com.academia.gymClass.GymClassModel;
 import com.academia.gymClass.GymClassRepository;
 import com.academia.gymClass.dto.GymClassResponseDTO;
@@ -29,6 +30,8 @@ public class StudentService {
     private final StudentRepository studentRepository;
      
     private final GymClassRepository gymClassRepository;
+
+    private final EnrollmentRepository enrollmentRepository;
 
     public StudentResponseDTO updateStudent(@NonNull String userId, @NonNull String studentId, 
         UpdateUserDTO userDTO, UpdateStudentDTO studentDTO) {
@@ -103,10 +106,14 @@ public class StudentService {
     //Aluno so ve aulas com status Disponivel
     public List<GymClassResponseDTO> listAvailableClasses() {
         List<GymClassModel> availableClasses = gymClassRepository.findByClassStatus(GymClassStatus.AVAILABLE);
-        return availableClasses.stream()
-        .map(GymClassResponseDTO::new)
+        return availableClasses
+        .stream()
+        .map(gymClass -> {
+            long enrolledCount = enrollmentRepository.countByClassId(gymClass.getId());
+            return new GymClassResponseDTO(gymClass, enrolledCount);
+        })
         .toList();
-    } 
+    }
 
     //Checar se status do plano 
     public boolean checkPlanStatus(@NonNull String id) {

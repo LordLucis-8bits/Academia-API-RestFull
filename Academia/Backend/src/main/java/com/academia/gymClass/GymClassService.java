@@ -83,12 +83,11 @@ public class GymClassService {
     }
 
     //Lista todas as aulas de um instrutor específico
-    public List<GymClassResponseDTO> getAllClasses(String instructorId) {
-        List<GymClassModel> gymClasses = gymClassRepository.findByUserId(instructorId);
-        return gymClasses
-        .stream()
-        .map(GymClassResponseDTO::new)
-        .toList();
+    public List<GymClassModel> getAllClasses(String userId) {
+        InstructorModel instructor = instructorRepository.findByUserId(userId)
+        .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
+
+        return gymClassRepository.findByInstructorId(instructor.getId());
     }
     
     ///////////////////////////////REGRAS DE NEGÓCIO////////////////////////////////
