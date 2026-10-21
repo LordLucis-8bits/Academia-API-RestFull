@@ -24,4 +24,17 @@ async function fetchAvailableClasses(): Promise<GymClass[]> {
 
 export default async function AvailableClassesPage() {
     const classes = await fetchAvailableClasses();
+
+    return (
+        <div>
+            <h1>Classes Available</h1>
+            {classes.map((classe) => (
+                <div key={classe.id}>
+                    <div>{classe.typeClass}</div>
+                    <div>{classe.schedule}</div>
+                    <div>{classe.enrolledCount} of {classe.studentsLimit}</div>
+                </div>
+            ))}
+        </div>
+    );
 }

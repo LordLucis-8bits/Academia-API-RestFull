@@ -23,7 +23,7 @@ export default async function StudentsPage() {
     return (
         <div>
             <header>
-                <h1 className="text-2xl font-bold">Bem-vindo, {student?.name}</h1>
+                <h1 className="text-2xl font-bold">Welcome, {student?.name}!</h1>
                 <p className="text-gray-600">Email: {student?.email}</p>
             </header>
             <div className="grid grid-cols-2 gap-4 mt-8">

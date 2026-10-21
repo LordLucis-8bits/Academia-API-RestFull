@@ -42,7 +42,7 @@ export default function LoginPage() {
     return (
     <div className="flex min-h-screen items-center justify-center">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-80">
-        <h1 className="text-xl font-bold">Faça seu login</h1>
+        <h1 className="text-xl font-bold">Sign In</h1>
 
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
@@ -65,7 +65,7 @@ export default function LoginPage() {
         />
 
         <button type="submit" className="bg-blue-600 text-white rounded p-2" disabled={loading}>
-          {loading ? "Entrando..." : "Entrar"}
+          {loading ? "Signing in..." : "Sign In"}
         </button>
       </form>
     </div>

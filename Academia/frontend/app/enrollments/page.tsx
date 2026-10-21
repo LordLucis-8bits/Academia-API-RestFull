@@ -34,7 +34,7 @@ export default async function EnrollmentsPage() {
 
     return (
         <div>
-            <h1>Aulas Matriculadas</h1>
+            <h1>Enrolled Classes</h1>
             {enrollments.map((enrollment) => (
                 <div key={enrollment.id}>{enrollment.classType}</div>
             ))}
