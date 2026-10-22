@@ -32,13 +32,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
             //Validar o token e autenticar o usuário
             try {
-                if (jwtService.isTokenValid(token)) {
-                    String email = jwtService.extractEmail(token); 
-                    UserDetails user = userDetailsService.loadUserByUsername(email);
-
-                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                }
+                if (jwtService.isSignatureValid(token)) {
+                    if (!jwtService.isExpired(token)) {
+                        String email = jwtService.extractEmail(token); 
+                        UserDetails user = userDetailsService.loadUserByUsername(email);
+                        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(auth);
+                    }
+                } 
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
             }

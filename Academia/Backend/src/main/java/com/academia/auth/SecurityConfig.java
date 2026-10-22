@@ -33,12 +33,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) .csrf(csrf -> csrf.disable()) //desabilita proteção CSRF, desnecessária aqui pois autenticação é via header, não cookie automático
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/auth/**").permitAll() //rotas /auth/ não precisa de autentição
+                .anyRequest().authenticated() //rota que exigem autenticação
             )
-            .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class); //roda JwtFilter antes do filtro padrão de autenticação do spring security, ele processa o token em toda requisição
 
         return http.build();
     }
