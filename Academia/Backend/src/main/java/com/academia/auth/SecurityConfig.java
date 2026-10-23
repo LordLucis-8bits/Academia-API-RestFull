@@ -1,7 +1,12 @@
 package com.academia.auth;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableMethodSecurity
+@EnableCaching 
 public class SecurityConfig {
 
     @Bean
@@ -28,7 +34,15 @@ public class SecurityConfig {
     @Bean
     public JwtFilter jwtFilter() {
         return new JwtFilter();
+    }  
+
+    @Bean
+    public CacheManager cacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("usuarios");
+        cacheManager.setCaffeine(Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES)); // aqui define o tempo
+        return cacheManager;
     }
+  
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

@@ -1,5 +1,6 @@
 package com.academia.auth;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Cacheable 
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
