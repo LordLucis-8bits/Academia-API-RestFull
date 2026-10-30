@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import EnrollButton from "./EnrollButton";
 
 interface GymClass {
     id: string;
@@ -8,6 +9,18 @@ interface GymClass {
     studentsLimit: number;
     classStatus: string;
     enrolledCount: number;
+}
+
+async function fetchStudent(): Promise<{ id: string }> {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+
+    const response = await fetch("http://localhost:8080/students/me", {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store"
+    });
+
+    return response.json();
 }
 
 async function fetchAvailableClasses(): Promise<GymClass[]> {
@@ -24,6 +37,7 @@ async function fetchAvailableClasses(): Promise<GymClass[]> {
 
 export default async function AvailableClassesPage() {
     const classes = await fetchAvailableClasses();
+    const student = await fetchStudent();
 
     return (
         <div>
@@ -33,6 +47,7 @@ export default async function AvailableClassesPage() {
                     <div>{classe.typeClass}</div>
                     <div>{classe.schedule}</div>
                     <div>{classe.enrolledCount} of {classe.studentsLimit}</div>
+                    <EnrollButton classId={classe.id} studentId={student.id} />
                 </div>
             ))}
         </div>

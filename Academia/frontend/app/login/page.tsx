@@ -29,7 +29,6 @@ export default function LoginPage() {
           }
           const data = await response.json();
 
-        
           if (data.role === "ADMIN") router.push("/admin");
           else if (data.role === "STUDENT") router.push("/students");
           else if (data.role === "INSTRUCTOR") router.push("/instructors");
