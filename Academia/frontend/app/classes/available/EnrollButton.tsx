@@ -5,9 +5,10 @@ import { useState } from "react";
 interface EnrollButtonProps {
     classId: string;
     studentId: string;
+    disabled: boolean;
 }
 
-export default function EnrollButton({ classId, studentId }: EnrollButtonProps) {
+export default function EnrollButton({ classId, studentId, disabled }: EnrollButtonProps) {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
@@ -42,7 +43,7 @@ export default function EnrollButton({ classId, studentId }: EnrollButtonProps) 
 
     return (
         <>
-        <button type="button" onClick={handleEnroll} disabled={loading || success}>
+        <button type="button" onClick={handleEnroll} disabled={loading || success || disabled}>
             {loading ? "Enrolling..." : success ? "Enrolled!" : "Enroll"}
         </button>
         {message && <p>{message}</p>}
