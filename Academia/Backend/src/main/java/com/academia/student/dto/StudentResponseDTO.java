@@ -22,6 +22,7 @@ public class StudentResponseDTO {
     private LocalDate planStart;
     private LocalDate planEnd;
     private PlanStatus planStatus;
+    private boolean isPlanActive;
 
     public StudentResponseDTO() {}
 
@@ -35,5 +36,6 @@ public class StudentResponseDTO {
         this.planStart = student.getPlanStart();
         this.planEnd = student.getPlanEnd();
         this.planStatus = student.getPlanStatus();
+        this.isPlanActive = student.isStudentPlanActive();
     }
 }

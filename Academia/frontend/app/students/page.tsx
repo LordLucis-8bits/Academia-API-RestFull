@@ -15,8 +15,7 @@ export default async function StudentsPage() {
                 <Link href="/students/enrollments" className="border rounded p-6 text-center cursor-pointer hover:bg-gray-50">Minhas Aulas Matriculadas</Link>
                 <Link href="/students/plan" className="border rounded p-6 text-center cursor-pointer hover:bg-gray-50">Checar Plano</Link>
                 <Link href="/students/me" className="border rounded p-6 text-center cursor-pointer hover:bg-gray-50">Minhas Informações</Link>
-            </div>
-            
+            </div> 
         </div>
     );
 }
