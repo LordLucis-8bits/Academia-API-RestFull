@@ -40,7 +40,7 @@ export default async function AvailableClassesPage() {
     return (
         <div>
             <h1>Classes Available</h1>
-            {!student.planActive && <p className="text-red-600">Your plan is expired. Renew it to enroll.</p>}
+            {!student.planActive && <p className="text-red-600">Your plan is inactive. Renew your plan to enroll</p>}
             {classes.map((classe) => (
                 <div key={classe.id}>
                     <div>{classe.typeClass}</div>
