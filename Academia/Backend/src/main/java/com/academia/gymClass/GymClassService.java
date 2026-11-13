@@ -83,11 +83,15 @@ public class GymClassService {
     }
 
     //Lista todas as aulas de um instrutor específico
-    public List<GymClassModel> getAllClasses(String userId) {
+    public List<GymClassResponseDTO> getAllClasses(String userId) {
         InstructorModel instructor = instructorRepository.findByUserId(userId)
         .orElseThrow(() -> new IllegalArgumentException("Instructor not found"));
 
-        return gymClassRepository.findByInstructorId(instructor.getId());
+        List<GymClassModel> classes = gymClassRepository.findByInstructorId(instructor.getId());
+
+        return classes.stream()
+        .map(GymClassResponseDTO::new)
+        .toList();
     }
     
     ///////////////////////////////REGRAS DE NEGÓCIO////////////////////////////////
@@ -113,6 +117,7 @@ public class GymClassService {
         if (classModel.getTypeClass() != instructor.getSpecialty()) {
             throw new IllegalStateException("Instructor cannot control this type of class");
         }
+
         classModel.setClassStatus(GymClassStatus.INPROGRESS);
         gymClassRepository.save(classModel);
     }
@@ -126,7 +131,7 @@ public class GymClassService {
         GymClassModel gymClass = gymClassRepository.findById(classId)
         .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
-        if (!gymClass.getInstructorId().equals(userId)) {
+        if (!gymClass.getInstructorId().equals(instructor.getId())) {
             throw new IllegalStateException("Instructor not authorized");
         }
 
@@ -140,7 +145,6 @@ public class GymClassService {
 
         gymClass.setClassStatus(GymClassStatus.FINISHED);
         gymClassRepository.save(gymClass);
-        
         reportService.generateClassReport(gymClass);
     }
 }

@@ -32,7 +32,9 @@ export default function LoginPage() {
           if (data.role === "ADMIN") router.push("/admin");
           else if (data.role === "STUDENT") router.push("/students");
           else if (data.role === "INSTRUCTOR") router.push("/instructors");
-      
+
+        } catch {
+          setError("Unable to sign in. Please try again.");
         } finally {
           setLoading(false);
         }

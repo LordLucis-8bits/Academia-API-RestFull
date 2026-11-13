@@ -60,7 +60,7 @@ public class GymClassController {
 
     @GetMapping("/my-classes")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public List<GymClassModel> getAllClasses(@AuthenticationPrincipal UserModel instructor) {
+    public List<GymClassResponseDTO> getAllClasses(@AuthenticationPrincipal UserModel instructor) {
         return gymClassService.getAllClasses(instructor.getId());
     } 
 
@@ -69,16 +69,16 @@ public class GymClassController {
     //Iniciar uma aula
     @PatchMapping("/{classId}/start")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<Void> startClass(@PathVariable String classId, @AuthenticationPrincipal UserModel Instructor) {
+    public ResponseEntity<String> startClass(@PathVariable String classId, @AuthenticationPrincipal UserModel Instructor) {
         gymClassService.startClass(classId, Instructor.getId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Class started successfully.");
     }
 
     //Finalizar uma aula
     @PatchMapping("/{classId}/finish")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<Void> finishClass(@PathVariable String classId, @AuthenticationPrincipal UserModel Instructor) {
+    public ResponseEntity<String> finishClass(@PathVariable String classId, @AuthenticationPrincipal UserModel Instructor) {
         gymClassService.finishClass(classId, Instructor.getId());
-        return ResponseEntity.ok().build(); 
+        return ResponseEntity.ok("Class finished successfully."); 
     }
 }

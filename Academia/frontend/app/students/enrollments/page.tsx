@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { getStudentInfo } from "@/lib/getStudentInfo";
 
 interface Enrollment {
     id: string;
@@ -13,13 +14,11 @@ async function getEnrollments(): Promise<Enrollment[]> {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
-    //Pega o id do aluno
-    const meResponse = await fetch("http://localhost:8080/students/me", {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store"
-    });
-
-    const student = await meResponse.json();
+    if (!token) {
+        throw new Error("Unauthorized");
+    }
+    
+    const student = await getStudentInfo();
 
     const enrollmentsResponse = await fetch(`http://localhost:8080/enrollments/student/${student.id}`, {
         headers: { Authorization: `Bearer ${token}` },

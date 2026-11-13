@@ -6,6 +6,14 @@ export async function POST(request: Request) {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value
 
+    if (!token) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!studentId || !classId) {
+        return Response.json({ error: "Student ID and Class ID are required" }, { status: 400 });
+    }
+
     const response = await fetch(`http://localhost:8080/enrollments/enroll?studentId=${studentId}&classId=${classId}`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` }
